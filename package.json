@@ -1,0 +1,15 @@
+{
+  "name": "roblox-minecraft-bot",
+  "version": "1.0.0",
+  "description": "Control a Minecraft bot via Roblox",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mineflayer": "^4.18.0",
+    "prismarine-viewer": "^1.28.0",
+    "socket.io": "^4.7.2"
+  }
+}
