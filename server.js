@@ -3,12 +3,12 @@
 const http = require('http')
 const express = require('express')
 const mineflayer = require('mineflayer')
-const { mineflayerViewer } = require('prismarine-viewer')
-const { Server } = require('socket.io')
+// const { mineflayerViewer } = require('prismarine-viewer')
+// const { Server } = require('socket.io')
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server)
+// const io = new Server(server)
 
 app.use(express.json())
 
@@ -47,7 +47,7 @@ function createBot(host, port, username) {
         botStatus = 'connected'
         try {
             const { mineflayerViewer } = require('prismarine-viewer')
-            mineflayerViewer(bot, { server, firstPerson: true })
+            // mineflayerViewer(bot, { server, firstPerson: true })
             console.log('Viewer running!')
         } catch (e) {
             console.log('Viewer failed to load, continuing without it:', e.message)
