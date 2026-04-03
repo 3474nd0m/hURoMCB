@@ -45,13 +45,13 @@ function createBot(host, port, username) {
 
     bot.once('spawn', () => {
         botStatus = 'connected'
-        console.log('Bot spawned!')
-
-        // mount viewer onto our existing http server instead of its own
-        // this means viewer is served at the same URL/port as the API
-        // so one port = bot vision AND Roblox API, works on Render free tier
-        mineflayerViewer(bot, { server, firstPerson: true })
-        console.log('Viewer mounted on same server!')
+        try {
+            const { mineflayerViewer } = require('prismarine-viewer')
+            mineflayerViewer(bot, { server, firstPerson: true })
+            console.log('Viewer running!')
+        } catch (e) {
+            console.log('Viewer failed to load, continuing without it:', e.message)
+        }
     })
 
     bot.on('error', (err) => {
