@@ -36,12 +36,13 @@ function createBot(host, port, username) {
 
     botStatus = 'connecting'
 
-    bot = mineflayer.createBot({
-        host: host || 'localhost',
-        port: port || 25565,
-        username: username || 'RobloxBot',
-        version: false
-    })
+bot = mineflayer.createBot({
+    host: host || 'localhost',
+    port: port || 25565,
+    username: username || 'RobloxBot',
+    version: false,
+    auth: 'offline'  // ADD THIS
+})
 
     bot.once('spawn', () => {
         botStatus = 'connected'
