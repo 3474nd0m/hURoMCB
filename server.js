@@ -65,7 +65,7 @@ function createBot(host, port, username) {
         bot = null
     })
 
-    bot.on('kicked', (reason) => {
+    bot.on('kicked', (reason) => {   
         botStatus = 'disconnected'
         console.log('Bot kicked:', reason)
         bot = null
