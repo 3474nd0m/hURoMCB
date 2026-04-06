@@ -140,6 +140,10 @@ app.post('/key', (req, res) => {
     if (key === 'use' && state === true) {
         bot.activateItem()
     }
+    const hotbarMatch = key.match(/^(\d)$/)
+    if (hotbarMatch && state === true) {
+        bot.setQuickBarSlot(parseInt(hotbarMatch[1]) - 1)
+    }
 
     res.json({ ok: true })
 })
@@ -178,6 +182,14 @@ app.get('/status', (req, res) => {
 
 app.get('/messages', (req, res) => {
     res.json({ messages: chatLog })
+})
+
+app.get('/inventory', (req, res) => {
+    if (!bot || botStatus !== 'connected') return res.json({ slots: [] })
+    const slots = bot.inventory.slots
+        .filter(item => item != null)
+        .map(item => ({ name: item.name, count: item.count, slot: item.slot }))
+    res.json({ slots })
 })
 
 // ==========================================
