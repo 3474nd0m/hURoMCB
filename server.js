@@ -3,17 +3,18 @@
 const http = require('http')
 const express = require('express')
 const mineflayer = require('mineflayer')
-// const { mineflayerViewer } = require('prismarine-viewer')
-// const { Server } = require('socket.io')
+const { mineflayerViewer } = require('prismarine-viewer')
+const { Server } = require('socket.io')
 
 const app = express()
 const server = http.createServer(app)
-// const io = new Server(server)
+const io = new Server(server)
 
 app.use(express.json())
 
 let bot = null
 let botStatus = 'disconnected'
+let chatLog = []
 let keys = {
     forward: false,
     back: false,
@@ -35,24 +36,24 @@ function createBot(host, port, username) {
     }
 
     botStatus = 'connecting'
+    chatLog = []
 
-bot = mineflayer.createBot({
-    host: host || 'localhost',
-    port: port || 25565,
-    username: username || 'RobloxBot',
-    version: false,
-    auth: 'offline'  // ADD THIS
-})
+    bot = mineflayer.createBot({
+        host: host || 'localhost',
+        port: port || 25565,
+        username: username || 'RobloxBot',
+        version: false
+    })
 
     bot.once('spawn', () => {
         botStatus = 'connected'
-        try {
-            const { mineflayerViewer } = require('prismarine-viewer')
-            // mineflayerViewer(bot, { server, firstPerson: true })
-            console.log('Viewer running!')
-        } catch (e) {
-            console.log('Viewer failed to load, continuing without it:', e.message)
-        }
+        console.log('Bot spawned!')
+
+        // mount viewer onto our existing http server instead of its own
+        // this means viewer is served at the same URL/port as the API
+        // so one port = bot vision AND Roblox API, works on Render free tier
+        mineflayerViewer(bot, { server, firstPerson: true })
+        console.log('Viewer mounted on same server!')
     })
 
     bot.on('error', (err) => {
@@ -66,7 +67,13 @@ bot = mineflayer.createBot({
         bot = null
     })
 
-    bot.on('kicked', (reason) => {   
+    bot.on('message', (jsonMsg) => {
+        const msg = jsonMsg.toString()
+        chatLog.push(msg)
+        if (chatLog.length > 50) chatLog.shift()
+    })
+
+    bot.on('kicked', (reason) => {
         botStatus = 'disconnected'
         console.log('Bot kicked:', reason)
         bot = null
@@ -155,6 +162,11 @@ app.post('/chat', (req, res) => {
     if (!message) return res.status(400).json({ error: 'message required' })
     bot.chat(message)
     res.json({ ok: true })
+})
+
+// messages
+app.get('/messages', (req, res) => {
+    res.json({ messages: chatLog })
 })
 
 // bot status
