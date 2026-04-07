@@ -140,9 +140,12 @@ app.post('/key', (req, res) => {
     if (key === 'use' && state === true) {
         bot.activateItem()
     }
-    const hotbarMatch = key.match(/^(\d)$/)
-    if (hotbarMatch && state === true) {
-        bot.setQuickBarSlot(parseInt(hotbarMatch[1]) - 1)
+    const hotbarMap = {
+        One: 0, Two: 1, Three: 2, Four: 3, Five: 4,
+        Six: 5, Seven: 6, Eight: 7, Nine: 8
+    }
+    if (hotbarMap.hasOwnProperty(key) && state === true) {
+        bot.setQuickBarSlot(hotbarMap[key])
     }
 
     res.json({ ok: true })
