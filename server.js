@@ -30,10 +30,10 @@ let keys = {
 // ==========================================
 
 function createBot(host, port, username) {
-    if (bot) {
-        bot.quit()
-        bot = null
-    }
+if (bot && typeof bot.quit === 'function') {
+  bot.quit()
+  bot = null
+}   
 
     botStatus = 'connecting'
     chatLog = []
@@ -117,8 +117,13 @@ app.post('/connect', (req, res) => {
 
 // disconnect bot
 app.post('/disconnect', (req, res) => {
-    if (bot) { bot.quit(); bot = null }
-    botStatus = 'disconnected'
+    if (bot && typeof bot.quit === 'function') {
+  bot.quit()
+  bot = null
+}   
+    bot.on('end', () => {
+  botStatus = 'disconnected'
+})   
     res.json({ ok: true })
 })
 
