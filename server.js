@@ -41,9 +41,10 @@ if (bot && typeof bot.quit === 'function') {
 bot = mineflayer.createBot({
     host: host || 'localhost',
     port: port || 25565,
-    username: username || 'RobloxBot',
+    username: username || 'hURoMCB-nilname',
     version: false,
     auth: 'offline'  // ADD THIS
+    keepAlive: false  // ADD THIS TOO
 })
 
 
