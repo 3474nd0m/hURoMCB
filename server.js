@@ -44,7 +44,8 @@ bot = mineflayer.createBot({
     username: username || 'hURoMCB-nilname',
     version: false,
     auth: 'offline',  // ADD THIS
-    keepAlive: false,  // ADD THIS TOO
+    hideErrors: false,
+    checkTimeoutInterval: Number.MAX_SAFE_INTEGER  // big 🤤
 })
 
 
