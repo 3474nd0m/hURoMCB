@@ -120,11 +120,11 @@ app.post('/connect', (req, res) => {
 // disconnect bot
 app.post('/disconnect', (req, res) => {
     if (bot && typeof bot.quit === 'function') {
-        bot.on('end', () => {
-            botStatus = 'disconnected'
-        })
-        bot.quit()
+        const b = bot
         bot = null
+        botStatus = 'disconnected'
+        b.on('end', () => {})
+        b.quit()
     }
     res.json({ ok: true })
 })
