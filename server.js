@@ -5,10 +5,12 @@ const express = require('express')
 const mineflayer = require('mineflayer')
 const { mineflayerViewer } = require('prismarine-viewer')
 let intentionalDisconnect = false // i moved it guys
+const net = require('net')
 // const { Server } = require('socket.io')
 
 const app = express()
 const server = http.createServer(app)
+  let lastHost, lastPort, lastUsername
 // const io = new Server(server)
 
 app.use(express.json())
@@ -26,11 +28,21 @@ let keys = {
     sneak: false
 }
 
+function testConnection(host, port, timeout = 5000) {
+    return new Promise((resolve) => {
+        const socket = net.createConnection({ host, port, timeout })
+        socket.once('connect', () => { socket.destroy(); resolve(true) })
+        socket.once('error', () => { socket.destroy(); resolve(false) })
+        socket.once('timeout', () => { socket.destroy(); resolve(false) })
+    })
+}
+
 // ==========================================
 // BOT CREATION
 // ==========================================
 
 function createBot(host, port, username) {
+    lastHost = host; lastPort = port; lastUsername = username
     if (bot && typeof bot.quit === 'function') {
       bot.quit()
       bot = null
@@ -43,7 +55,7 @@ function createBot(host, port, username) {
         host: host || 'localhost',
         port: port || 25565,
         username: username || 'hURoMCB-nilname',
-        version: '1.21.1',
+        version: false,
         auth: 'offline',  // ADD THIS
         hideErrors: false,
         // keepAlive: true, // please poll tyty
@@ -126,6 +138,10 @@ app.get('/ping', (req, res) => {
 app.post('/connect', (req, res) => {
     const { host, port, username } = req.body
     if (!host) return res.status(400).json({ error: 'host required' })
+    
+    const reachable = await testConnection(host, port || 25565)
+    if (!reachable) return res.status(400).json({ error: 'server unreachable' })
+    
     createBot(host, port, username)
     res.json({ ok: true, message: 'Bot connecting...' })
 })
