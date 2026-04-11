@@ -43,7 +43,7 @@ bot = mineflayer.createBot({
     host: host || 'localhost',
     port: port || 25565,
     username: username || 'hURoMCB-nilname',
-    version: false,
+    version: '1.21.1',
     auth: 'offline',  // ADD THIS
     hideErrors: false,
     keepAlive: false // not as big but uh
