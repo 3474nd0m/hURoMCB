@@ -55,7 +55,7 @@ function createBot(host, port, username) {
         host: host || 'localhost',
         port: port || 25565,
         username: username || 'hURoMCB-nilname',
-        version: false,
+        version: '1.21.10',
         auth: 'offline',  // ADD THIS
         hideErrors: false,
         // keepAlive: true, // please poll tyty
