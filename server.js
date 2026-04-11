@@ -59,7 +59,7 @@ function createBot(host, port, username) {
         auth: 'offline',  // ADD THIS
         hideErrors: false,
         // keepAlive: true, // please poll tyty
-        checkTimeoutInterval: 60000
+        // checkTimeoutInterval: 60000
     })
 
     // bot.on('physicsTick', () => {}) // keep bot active
