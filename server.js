@@ -43,6 +43,7 @@ function testConnection(host, port, timeout = 5000) {
 
 function createBot(host, port, username) {
     lastHost = host; lastPort = port; lastUsername = username
+      console.log(`🤖 Creating bot: ${host}:${port} as ${username}`)
     if (bot && typeof bot.quit === 'function') {
       bot.quit()
       bot = null
@@ -85,16 +86,13 @@ function createBot(host, port, username) {
     
     // in bot.on('end')
     bot.on('end', (why) => {
-        botStatus = 'disconnected'
+      botStatus = 'disconnected'
       console.log('ok i end now and why is', why)
-        bot = null
-        if (!intentionalDisconnect && retryCount < MAX_RETRIES) {
-            retryCount++
-            setTimeout(() => createBot(lastHost, lastPort, lastUsername), 5000)
-        } else {
-            intentionalDisconnect = false
-            retryCount = 0
-        }
+      bot = null
+      if (!intentionalDisconnect && retryCount < MAX_RETRIES) {
+        retryCount++
+        setTimeout(() => createBot(lastHost, lastPort, lastUsername), 5000)
+      }
     })
 
     bot.on('kicked', (reason) => {   
