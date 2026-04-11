@@ -31,25 +31,27 @@ let keys = {
 // ==========================================
 
 function createBot(host, port, username) {
-if (bot && typeof bot.quit === 'function') {
-  bot.quit()
-  bot = null
-}   
-
+    if (bot && typeof bot.quit === 'function') {
+      bot.quit()
+      bot = null
+    }   
+    
     botStatus = 'connecting'
     chatLog = []
+    
+    bot = mineflayer.createBot({
+        host: host || 'localhost',
+        port: port || 25565,
+        username: username || 'hURoMCB-nilname',
+        version: '1.21.1',
+        auth: 'offline',  // ADD THIS
+        hideErrors: false,
+        // keepAlive: true, // please poll tyty
+        checkTimeoutInterval: 60000
+    })
 
-bot = mineflayer.createBot({
-    host: host || 'localhost',
-    port: port || 25565,
-    username: username || 'hURoMCB-nilname',
-    version: '1.21.1',
-    auth: 'offline',  // ADD THIS
-    hideErrors: false,
-    keepAlive: false // not as big but uh
-})
-
-
+    // bot.on('physicsTick', () => {}) // keep bot active
+    
     bot.once('spawn', () => {
         botStatus = 'connected'
         try {
