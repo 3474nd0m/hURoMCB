@@ -63,20 +63,27 @@ function createBot(host, port, username) {
         // checkTimeoutInterval: 60000
     })
 
+    
+    // add this one - fires before spawn
+    bot._client.on('session', () => console.log('🔑 Session established'))
+    bot._client.on('connect', () => console.log('🔌 TCP connected'))
+    bot._client.on('disconnect', (packet) => console.log('📦 Disconnect packet:', packet))
+
     // bot.on('physicsTick', () => {}) // keep bot active
     
     bot.once('spawn', () => {
         botStatus = 'connected'
+        console.log('✅ spawned!')
         try {
             const { mineflayerViewer } = require('prismarine-viewer')
             mineflayerViewer(bot, { server, firstPerson: true })
             console.log('Viewer running!')
         } catch (e) {
-            console.log('Viewer failed to load, continuing without it:', e.message)
+            console.log('Viewer failed:', e.message)
         }
-      bot._client.on('packet', (data, metadata) => {
-        console.log('📦 packet:', metadata.name)
-      })
+        bot._client.on('packet', (data, metadata) => {
+            console.log('📦 packet:', metadata.name)
+        })
     })
 
     bot.on('error', (err) => {
@@ -110,10 +117,6 @@ function createBot(host, port, username) {
     })
 }
 
-// add this one - fires before spawn
-bot._client.on('session', () => console.log('🔑 Session established'))
-bot._client.on('connect', () => console.log('🔌 TCP connected'))
-bot._client.on('disconnect', (packet) => console.log('📦 Disconnect packet:', packet))
 
 // ==========================================
 // MOVEMENT LOOP
@@ -141,8 +144,7 @@ app.get('/ping', (req, res) => {
     res.json({ alive: true, botStatus })
 })
 
-// connect bot to a minecraft server
-app.post('/connect', (req, res) => {
+app.post('/connect', async (req, res) => {
     const { host, port, username } = req.body
     if (!host) return res.status(400).json({ error: 'host required' })
     
