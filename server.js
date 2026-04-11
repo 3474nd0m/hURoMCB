@@ -4,6 +4,7 @@ const http = require('http')
 const express = require('express')
 const mineflayer = require('mineflayer')
 const { mineflayerViewer } = require('prismarine-viewer')
+let intentionalDisconnect = false // i moved it guys
 // const { Server } = require('socket.io')
 
 const app = express()
@@ -126,7 +127,6 @@ app.post('/connect', (req, res) => {
     createBot(host, port, username)
     res.json({ ok: true, message: 'Bot connecting...' })
 })
-let intentionalDisconnect = false
 
 // in your /disconnect route
 app.post('/disconnect', (req, res) => {
