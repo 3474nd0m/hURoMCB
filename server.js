@@ -65,10 +65,20 @@ bot = mineflayer.createBot({
         console.error('Bot error:', err.message)
     })
 
+    let retryCount = 0
+    const MAX_RETRIES = 3
+    
+    // in bot.on('end')
     bot.on('end', () => {
         botStatus = 'disconnected'
-        console.log('Bot disconnected')
         bot = null
+        if (!intentionalDisconnect && retryCount < MAX_RETRIES) {
+            retryCount++
+            setTimeout(() => createBot(lastHost, lastPort, lastUsername), 5000)
+        } else {
+            intentionalDisconnect = false
+            retryCount = 0
+        }
     })
 
     bot.on('kicked', (reason) => {   
@@ -116,9 +126,11 @@ app.post('/connect', (req, res) => {
     createBot(host, port, username)
     res.json({ ok: true, message: 'Bot connecting...' })
 })
+let intentionalDisconnect = false
 
-// disconnect bot
+// in your /disconnect route
 app.post('/disconnect', (req, res) => {
+    intentionalDisconnect = true
     if (bot && typeof bot.quit === 'function') {
         const b = bot
         bot = null
