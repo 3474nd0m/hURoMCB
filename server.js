@@ -74,6 +74,9 @@ function createBot(host, port, username) {
         } catch (e) {
             console.log('Viewer failed to load, continuing without it:', e.message)
         }
+      bot._client.on('packet', (data, metadata) => {
+        console.log('📦 packet:', metadata.name)
+      })
     })
 
     bot.on('error', (err) => {
