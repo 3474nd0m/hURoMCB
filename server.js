@@ -84,8 +84,9 @@ function createBot(host, port, username) {
     const MAX_RETRIES = 3
     
     // in bot.on('end')
-    bot.on('end', () => {
+    bot.on('end', (why) => {
         botStatus = 'disconnected'
+      console.log('ok i end now and why is', why)
         bot = null
         if (!intentionalDisconnect && retryCount < MAX_RETRIES) {
             retryCount++
@@ -107,6 +108,11 @@ function createBot(host, port, username) {
         if (chatLog.length > 50) chatLog.shift()
     })
 }
+
+// add this one - fires before spawn
+bot._client.on('session', () => console.log('🔑 Session established'))
+bot._client.on('connect', () => console.log('🔌 TCP connected'))
+bot._client.on('disconnect', (packet) => console.log('📦 Disconnect packet:', packet))
 
 // ==========================================
 // MOVEMENT LOOP
