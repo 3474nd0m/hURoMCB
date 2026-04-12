@@ -3,9 +3,13 @@
 const http = require('http')
 const express = require('express')
 const mineflayer = require('mineflayer')
-const { mineflayerViewer } = require('prismarine-viewer')
+const { mineflayer: viewerFunc } = require('prismarine-viewer')
+
+console.log(require('prismarine-viewer'))
 let intentionalDisconnect = false // i moved it guys
 const net = require('net')
+    let miningLoop = null
+    let isDigging = false
 // const { Server } = require('socket.io')
 
 const app = express()
@@ -25,7 +29,8 @@ let keys = {
     right: false,
     jump: false,
     sprint: false,
-    sneak: false
+    sneak: false,
+    ctrl: false  // add this
 }
 
 function testConnection(host, port, timeout = 5000) {
@@ -75,15 +80,14 @@ function createBot(host, port, username) {
         botStatus = 'connected'
         console.log('✅ spawned!')
         try {
-            const { mineflayerViewer } = require('prismarine-viewer')
-            mineflayerViewer(bot, { server, firstPerson: true })
+            viewerFunc(bot, {server, firstPerson: true })
             console.log('Viewer running!')
         } catch (e) {
             console.log('Viewer failed:', e.message)
         }
-        bot._client.on('packet', (data, metadata) => {
-            console.log('📦 packet:', metadata.name)
-        })
+        // bot._client.on('packet', (data, metadata) => {
+        //     console.log('📦 packet:', metadata.name)
+        // })
     })
 
     bot.on('error', (err) => {
@@ -112,6 +116,7 @@ function createBot(host, port, username) {
     })
     bot.on('message', (jsonMsg) => {
         const msg = jsonMsg.toString()
+        console.log('💬 message:', msg)
         chatLog.push(msg)
         if (chatLog.length > 50) chatLog.shift()
     })
@@ -179,8 +184,34 @@ app.post('/key', (req, res) => {
         keys[key] = state === true
     }
 
+
     if (key === 'attack' && state === true) {
-        bot.attack(bot.nearestEntity())
+        miningLoop = setInterval(async () => {
+            if (isDigging) return
+            try {
+                const block = bot.blockAtCursor(5)
+                const entity = bot.nearestEntity(e => e !== bot.entity)
+                const entityDist = entity ? bot.entity.position.distanceTo(entity.position) : Infinity
+                const blockDist = block ? bot.entity.position.distanceTo(block.position) : Infinity
+
+                if (block && block.name !== 'air' && blockDist < entityDist) {
+                    isDigging = true
+                    await bot.dig(block)
+                    isDigging = false
+                } else if (entity && entityDist < 4) {
+                    bot.attack(entity)
+                }
+            } catch(e) { isDigging = false }
+        }, 100)
+    }
+
+    if (key === 'attack' && state === false) {
+        if (miningLoop) {
+            clearInterval(miningLoop)
+            miningLoop = null
+        }
+        isDigging = false
+        try { bot.stopDigging() } catch(e) {}
     }
 
     if (key === 'use' && state === true) {
@@ -193,9 +224,46 @@ app.post('/key', (req, res) => {
     if (hotbarMap.hasOwnProperty(key) && state === true) {
         bot.setQuickBarSlot(hotbarMap[key])
     }
+    if (key === 'dropAll' && state === true) {
+        const item = bot.inventory.slots[bot.quickBarSlot]
+        if (item) bot.tossStack(item, ()=>{})
+    }
+    if (key === 'ctrl') {
+        keys.ctrl = state
+        keys.sprint = state
+    }
+
+    if (key === 'drop' && state === true) {
+        console.log('🗑️ drop triggered, ctrl:', keys.ctrl, 'slot:', bot.quickBarSlot)
+         console.log('all slots:', bot.inventory.slots.map(s => s?.name))
+        const item = bot.inventory.slots[bot.quickBarSlot+36]
+        console.log('item:', item?.name)
+        if (!item) { res.json({ ok: true }); return }
+        if (keys.ctrl) {
+            bot.tossStack(item, ()=>{})
+        } else {
+            bot.toss(item.type, null, 1, ()=>{})
+        }
+    }
 
     res.json({ ok: true })
 })
+
+// app.post('/drop', (req, res) => {
+//     if (!bot || botStatus !== 'connected')
+//         return res.status(400).json({ error: 'bot not connected' })
+    
+//     const { all } = req.body
+//     const item = bot.inventory.slots[bot.quickBarSlot]
+//     if (!item) return res.json({ ok: true, message: 'nothing to drop' })
+    
+//     if (all) {
+//         bot.tossStack(item, (err) => { if (err) console.log('toss err:', err) })
+//     } else {
+//         bot.toss(item.type, null, 1, (err) => { if (err) console.log('toss err:', err) })
+//     }
+//     res.json({ ok: true })
+// })
 
 // look direction
 app.post('/look', (req, res) => {
