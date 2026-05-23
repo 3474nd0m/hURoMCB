@@ -7,6 +7,8 @@ const { mineflayer: viewerFunc } = require('prismarine-viewer')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const net = require('net')
 
+const retryCounts = {}
+
 const app = express()
 const server = http.createServer(app)
 
@@ -156,33 +158,35 @@ function createBot(playerId, host, port, username) {
     bot._client.on('connect', () => console.log(`🔌 [${playerId}] TCP connected`))
     bot._client.on('disconnect', (packet) => console.log(`📦 [${playerId}] Disconnect:`, packet))
 
-    bot.once('spawn', () => {
-        botStatuses[playerId] = 'connected'
-        console.log(`✅ [${playerId}] Spawned!`)
-		try {
-			const viewer = viewerFunc(bot, { port: parseInt(PORT)+1, firstPerson: true })
-			viewerServers[playerId] = viewer
-			console.log('Viewer running!')
-		} catch (e) {
-			console.log('Viewer failed:', e.message)
-		}	
+	bot.once('spawn', () => {
+	    botStatuses[playerId] = 'connected'
+ 		console.log(`✅ [${playerId}] Spawned!`)
+   			if (!viewerServers[playerId]) {  // ← add this guard
+   		    	try {
+	        	const viewer = viewerFunc(bot, { port: parseInt(PORT)+1, firstPerson: true })
+            	viewerServers[playerId] = viewer
+            	console.log('Viewer running!')
+        	} catch (e) {
+	            console.log('Viewer failed:', e.message)
+    	    }
+    	}
+	})
 
-    })
 
 	bot.on('error', (err) => {
 		botStatuses[playerId] = 'error'
 		console.error(`❌ [${playerId}] Bot error:`, err.message)
 		if (!bots[playerId]) return
 		bots[playerId] = null
-		if (!intentionalDisconnects[playerId] && retryCount < MAX_RETRIES) {
-			retryCount++
+		if (!intentionalDisconnects[playerId] && retryCounts[playerId] < MAX_RETRIES) {
+			retryCounts[playerId]++
 			setTimeout(() => createBot(playerId, lastHosts[playerId], lastPorts[playerId], lastUsernames[playerId]), 10000)
 		}
 	})
 
+	if (!retryCounts[playerId]) retryCounts[playerId] = 0
+		const MAX_RETRIES = 3
 
-    let retryCount = 0
-    const MAX_RETRIES = 3
 
     bot.on('end', (why) => {
         botStatuses[playerId] = 'disconnected'
