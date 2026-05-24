@@ -200,12 +200,12 @@ function createBot(playerId, host, port, username) {
 				} catch (e) {}
 			viewerServers[playerId] = null
 		}
-        if (!intentionalDisconnects[playerId] && retryCount < MAX_RETRIES) {
-            retryCount++
+        if (!intentionalDisconnects[playerId] && retryCounts[playerId] < MAX_RETRIES) {
+            retryCounts[playerId]++
             setTimeout(() => createBot(playerId, lastHosts[playerId], lastPorts[playerId], lastUsernames[playerId]), 5000)
         } else {
             intentionalDisconnects[playerId] = false
-            retryCount = 0
+            retryCounts[playerId] = 0
         }
     })
 
