@@ -249,6 +249,38 @@ setInterval(() => {
 // ROUTES
 // ==========================================
 
+app.get('/', (req, res) => {
+	res.send(`<pre>
+	Welcome to /
+
+	GET  /                                         - User, take a wild FUCKING guess where you are right now.
+	GET  /ping                                     - shows if the server is online. I mean, you can see this, so it probably is.
+	GET  /status?playerId=x                        - gets bot status, health, position, etc -playerId: who bro is
+	GET  /messages?playerId=x                      - gets chat log -playerId: ...who bro is
+	GET  /inventory?playerId=x                     - gets inventory slots -playerId: bro
+	GET  /minimap/:playerId?chunk=y                - tiny xaero's minimap basically in PNG -:playerId_ who is bro -chunk: render distance
+	GET  /chunkview/:playerId?chunk=y              - 3D chunk view PNG -chunk: render distance -:playerId_ take a wild guess gng
+	GET  /thestory/:vol?page=y                     - hUX2MCB, lore accurate story from the sentinelcraft book -:vol_ volume (basically, season) -page: ...page.
+
+	POST /connect {playerId, host, port, username} - connects bot
+	POST /disconnect {playerId}                    - disconnects bot 
+	POST /key {playerId, key, state}               - sends key input 
+	POST /look {playerId, yaw, pitch}              - sets yaw/pitch 
+	POST /chat {playerId, message}                 - sends chat message
+
+	</pre>`)
+})
+
+app.get('/thestory/:vol', (req, res) => {
+	const { vol } = req.params
+	const { page } = req.query
+	res.send(`<pre>
+	Please wait for 001 to retrieve the book. Thank you for your patience.
+	Vol: ${vol}, Page: ${page ?? 1}
+	</pre>`)
+})
+
+
 app.get('/ping', (req, res) => {
     res.json({ alive: true })
 })
