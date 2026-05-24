@@ -258,9 +258,9 @@ app.get('/', (req, res) => {
 	GET  /status?playerId=x                        - gets bot status, health, position, etc -playerId: who bro is
 	GET  /messages?playerId=x                      - gets chat log -playerId: ...who bro is
 	GET  /inventory?playerId=x                     - gets inventory slots -playerId: bro
-	GET  /minimap/:playerId?chunk=y                - tiny xaero's minimap basically in PNG -:playerId_ who is bro -chunk: render distance
-	GET  /chunkview/:playerId?chunk=y              - 3D chunk view PNG -chunk: render distance -:playerId_ take a wild guess gng
-	GET  /thestory/:vol?page=y                     - hUX2MCB, lore accurate story from the sentinelcraft book -:vol_ volume (basically, season) -page: ...page.
+	GET  /minimap/:playerId?chunk=y                - tiny xaero's minimap basically in PNG -:playerId_ who is bro -chunk: render distance (WIP)
+	GET  /chunkview/:playerId?chunk=y              - 3D chunk view PNG -chunk: render distance -:playerId_ take a wild guess gng (WIP)
+	GET  /thestory/:vol?page=y                   - hUX2MCB, lore accurate story from the sentinelcraft book -:vol_ volume (basically, season) -page: ...page. (WIP)
 
 	POST /connect {playerId, host, port, username} - connects bot
 	POST /disconnect {playerId}                    - disconnects bot 
@@ -296,6 +296,79 @@ app.get('/status', (req, res) => {
         position: bot?.entity?.position ?? null,
         username: bot?.username ?? null
     })
+})
+
+const { createCanvas } = require('canvas')
+
+// basic block color map
+const blockColors = {
+	air: null,
+	water: '#3F76E4',
+	lava: '#FF6600',
+	grass_block: '#5D9E3A',
+	dirt: '#8B5E3C',
+	stone: '#888888',
+	sand: '#E8D8A0',
+	gravel: '#9A9A9A',
+	wood: '#8B5E3C',
+	leaves: '#3A7D44',
+	snow: '#FFFFFF',
+	ice: '#A0C8FF',
+	bedrock: '#333333',
+	oak_log: '#6B4C2A',
+	oak_leaves: '#3A7D44',
+	birch_log: '#D0C89A',
+	birch_leaves: '#80A050',
+	default: '#A0A0A0'
+}
+
+function getBlockColor(blockName) {
+	return blockColors[blockName] ?? blockColors.default
+}
+
+app.get('/minimap/:playerId', async (req, res) => {
+	const { playerId } = req.params
+	const chunkRadius = parseInt(req.query.chunk ?? 3)
+	const bot = bots[playerId]
+	if (!bot || botStatuses[playerId] !== 'connected')
+		return res.status(400).json({ error: 'bot not connected' })
+
+	const blockSize = 4
+	const diameter = chunkRadius * 2 * 16
+	const canvas = createCanvas(diameter * blockSize, diameter * blockSize)
+	const ctx = canvas.getContext('2d')
+	ctx.fillStyle = '#1a1a1a'
+	ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+	const playerPos = bot.entity.position
+	const startX = Math.floor(playerPos.x) - (chunkRadius * 16)
+	const startZ = Math.floor(playerPos.z) - (chunkRadius * 16)
+
+	for (let x = 0; x < diameter; x++) {
+		for (let z = 0; z < diameter; z++) {
+			const worldX = startX + x
+			const worldZ = startZ + z
+			// find topmost non-air block
+			for (let y = 255; y >= 0; y--) {
+				const block = bot.blockAt(new (require('vec3'))(worldX, y, worldZ))
+				if (!block || block.name === 'air') continue
+				const color = getBlockColor(block.name)
+				if (!color) continue
+				ctx.fillStyle = color
+				ctx.fillRect(x * blockSize, z * blockSize, blockSize, blockSize)
+				break
+			}
+		}
+	}
+
+	// draw player position as red dot
+	const centerX = Math.floor(diameter / 2) * blockSize
+	const centerZ = Math.floor(diameter / 2) * blockSize
+	ctx.fillStyle = '#FF0000'
+	ctx.fillRect(centerX, centerZ, blockSize, blockSize)
+
+	res.setHeader('Content-Type', 'image/png')
+	canvas.createPNGStream().pipe(res)
 })
 
 app.post('/connect', async (req, res) => {
