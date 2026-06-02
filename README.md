@@ -14,6 +14,7 @@ not found anywhere except the tscn file\
 powered by godot\
 IS being worked on rn\
 mentioned in the book in sentinelcraft\
+UPDATE: it's lost media sorry guys
 
 ## hUXDMCB
 WHO THE FUCK IS THIS???\
