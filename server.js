@@ -622,7 +622,7 @@ ps: ik we're on render now
 but this was made on a mc
 book soo still cuts here lol
 </pre>`)
-		}
+		} else { res.send(`<res><i>thats all folks!</i></res>`) }
 	} else if (vol == '2') {
 	res.send(`<pre>
 i didnt finish volume 2
