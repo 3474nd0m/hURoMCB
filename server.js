@@ -261,6 +261,7 @@ GET  /inventory?playerId=x                     - gets inventory slots -playerId:
 GET  /minimap/:playerId?chunk=y                - tiny xaero's minimap basically in PNG -:playerId_ who is bro -chunk: render distance (WIP)
 GET  /chunkview/:playerId?chunk=y              - 3D chunk view PNG -chunk: render distance -:playerId_ take a wild guess gng (WIP)
 GET  /thestory/:vol?page=y                     - hUX2MCB, lore accurate story from the sentinelcraft book -:vol_ volume (basically, season) -page: ...page. (WIP)
+GET  /sc                                       - Pretty cool server you might want to try out!
 
 POST /connect {playerId, host, port, username} - connects bot
 POST /disconnect {playerId}                    - disconnects bot 
@@ -622,22 +623,24 @@ ps: ik we're on render now
 but this was made on a mc
 book soo still cuts here lol
 </pre>`)
-		} else { res.send(`<res><i>thats all folks!</i></res>`) }
+		} else if (!page) {res.redirect('http://huhux2mcbrcc.onrender.com/thestory/1?page=1')} else { res.send(`<res>
+Vol: ${vol}, Page: ${page ?? "?"}
+<i>thats all folks!</i></res>`) }
 	} else if (vol == '2') {
 	res.send(`<pre>
-i didnt finish volume 2
+i didnt start volume 2
 Vol: ${vol}, Page: ${page ?? "?"}
 </pre>`)	
-	} else {
-	res.send(`<pre>
-Invalid Paramaters. Go back some pages, or go to volume 2 if you finished volume 1.
-Vol: ${vol}, Page: ${page ?? "?"}
-</pre>`) }
+	} else {res.redirect('http://huhux2mcbrcc.onrender.com/thestory/1?page=1') }
 })
 
 
 app.get('/ping', (req, res) => {
     res.json({ alive: true })
+})
+
+app.get('/sc', (req, res) => {
+	res.redirect('sentinelcraft.net')
 })
 
 app.get('/status', (req, res) => {
