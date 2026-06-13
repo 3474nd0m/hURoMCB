@@ -271,13 +271,368 @@ POST /chat {playerId, message}                 - sends chat message
 	</pre>`)
 })
 
+app.get('/thestory', (req, res) => {
+  res.send(`<pre>Please wait for 001 to retrieve the book. Thank you for your patience.</pre>`)
+})
+
 app.get('/thestory/:vol', (req, res) => {
 	const { vol } = req.params
 	const { page } = req.query
+	if (vol == '1') {
+		if (page == '1') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+       --= hUX2MCB =--
+I had a dream. When I was a
+kid, I always wanted to know
+what it was like playing
+Minecraft.
+But unfortunately, because of
+the game being paid, and my
+parents probably going to
+refuse me playing it, so the
+idea was scrapped.
+
+However, that was...
+
+I had an idea.</pre>`)
+		} else if (page == '2') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+       --= hUX2MCB =--
+8 years later, I had an idea.
+A vision. And I know it could
+work. It has to. Using my
+knowledge on UI, UX, and HTTP
+requests, I got to work.
+I booted up Roblox Studio,
+booted up VSCode, and got to
+work.
+"5 year old me is going to be
+so proud..." I thought to
+myself.
+
+He sure would, wouldn't he?</pre>`)
+		} else if (page == '3') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+After days of self-doubt,
+optimism, and hope... it was
+done. I made it. HuRoMCB. Of
+course, it was nothing flashy,
+but it was something. And
+after testing, it worked. I
+finally connected to a
+Minecraft server.
+The server was empty, as
+always, just me and... this
+other guy. This was all I
+needed.
+...why is there so much pages?</pre>`)
+		} else if (page == '4') {
+		res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+Well, this... other guy didn't
+seem to mind I did nothing. I
+couldn't see his chats for
+some reason, and I didn't do
+the captcha, so after a bit, I
+got kicked out. After my exit,
+I could (for some reason)
+&lt;i&gt;feel&lt;/i&gt; the next guy that's
+about to join buzz with
+excitement about my existance.
+Can't blame him, I would too.
+
+But then, why would he?</pre>`)
+		} else if (page == '5') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+I continued meticuliously
+testing and stress pressing,
+joining and leaving the server
+until I was satasified.
+Until, I got a bit cocky, and I
+didn't check the playerlist
+when I joined.
+
+Shit. I was caught.
+
+While someone that had the
+same name as me and his
+friend were playing.</pre>`)
+		} else if (page == '6') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+"Wait,&lt;br/&gt;MarcoMC2009...
+Marco_IDK001...&lt;br/&gt;it's kinda
+sus" RealCBroTwo observed
+almost instantly.
+"idk man could be a
+coincidence&lt;br/&gt;theres a lotta
+people named marco nowadays"
+MarcoMC2009 defended.
+
+I stood like a deer in
+headlights. I mean, in this
+situation,
+What could I do?</pre>`)
+		} else if (page == '7') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+Nothing, exactly.
+The two continued arguing
+about if I was either an
+unfortunate player, an alt
+account, or a bot.
+And after a few minutes of
+absolute stillness, I timed out.
+I actually left, but lets
+pretend it was the former
+instead.
+
+I set some tings, but what I
+needed was to process allat.
+</pre>`)
+		} else if (page == '8') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+I tweak a few settings, add a
+few more, and at this point,
+they already know. Why check
+the playerlist at this point?
+"well speak of the devil"
+MarcoMC2009 points out.
+
+...I don't remember what
+happened after that, but I
+still remained completely
+still. Plus, yet again,
+
+What was I supposed to do?</pre>`)
+		} else if (page == '9') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+I joined again, still testing,
+until suddenly, MarcoMC2009
+reveals the truth.
+"listen&lt;br/&gt;001, you aren't
+supposed to exist" 2009
+admits.
+&lt;i&gt;not &lt;b&gt;supposed&lt;/b&gt; &lt;/i&gt;to? 
+how does that work?&lt;/i&gt; I wanted
+to tell them. But they
+answered for me.
+"you're a bit of an...
+experiment. i made you, and i
+know you arent stable yet."</pre>`)
+		} else if (page == '10') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+&lt;i&gt;...wha-?&lt;/i&gt; I questioned
+them once more, before getting
+abducted.
+"no time to explain, just go-!"
+2009 responded instantly,
+dragging me... somewhere.
+
+I "look" around.
+I see nothing, but at the same
+time I saw everything I needed
+to.
+
+I've been captured.
+</pre>`)
+		} else if (page == '11') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+Although it isn't the worst
+thing in the world. He isn't
+that strict about it, which,
+thank goodness. All he wants
+me to do is see what I can
+and can't do, thats really it.
+
+Although hey, one more person
+is helping with me checking
+what I can and can't do, I had
+one question I couldn't say.
+
+Why?</pre>`)
+		} else if (page == '12') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hURoMCB =--
+Why did 2009 drag me into
+this? Why me specificially?
+Why this? I keep my mouth
+shut, since I ain't complaining.
+
+From time to time, I do let
+my sassiness out, simply
+because... why not? And
+thankfully, 2009 was very
+forgiving. However, something
+unexpected happened.
+
+An update?
+</pre>`)
+		} else if (page == '13') {
+			res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+ --= hU2MCB - hURo/GDMCB =--
+Yup, an update. Everything was
+perfect, until there was a
+problem, that this time, wasn't
+about the bot. It was the
+platform.
+Roblox is rolling out Roblox
+Kids and Roblox Select, and
+the 16+ ID publishing rule.
+
+This affects me.
+This affects hURoMCB.
+
+This needs to move.
+</pre>`)
+		} else if (page == '14') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+    --= hUX2MCB ? X2 =--
+Great. Now I have to find
+"Roblox Studio replacements"
+and pray that one's actually
+good. Which, lets be real,
+they're all paid, or all shit.
+
+Of course, this replacement is
+shit as well, but my standards
+are so low I just want to get
+this project finished.
+It's prolly the one you know,
+
+Godot.</pre>`)
+		} else if (page == '15') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hUGDMCB =--
+Yup. Godot. But of course, I
+had to play around with it
+first. And after I did... it is
+absolutely GARBAGE for 3D
+games. for 2D games, despite
+being a Vector2 instead of a
+UDim2, it was... fine?
+Good enough for this project
+anyway. So, I started migrating
+hURoMCB.
+
+And, sure, it took a damn
+while, but it sure is there.</pre>`)
+		} else if (page == '16') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hUGDMCB =--
+Continuing my tests, I can do
+a lot of things. Probably most
+of what a player can do.
+Except the UI. I escaped my
+confines, just to be put in a
+bigger one. But overall, things
+were great, and I wish to be
+accepted into a server one
+day.
+
+However, 2009 wouldn't give me
+that.
+So I'll get it myself.</pre>`)
+		} else if (page == '17') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hUGDMCB =--
+I started to try and escape
+my confines' confines, escaping
+the server itself and into
+where I want to be.
+
+I broke the glass chaimber,
+but all I was met with... was
+more glass.
+
+I left.
+And I joined.
+And I returned.</pre>`)
+		} else if (page == '18') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hUGDMCB =--
+"hey guys\nmissed me?" I ask.
+...I dont see a response. Only
+tags and names. "[G] [M]
+MarcoMC2009", what the fuck is
+that supposed to mean?
+I don't see a reason for me to
+be here if noone's gonna say
+anything and there's nothing
+cool to do, so I just leave.
+
+But there still is one thing I
+must have answered. It's
+starting to keep me up.
+</pre>`)
+		} else if (page == '19') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+  --= hUX2MCB - hUGDMCB =--
+Why is he helping [i]me[/i] out
+of all people?
+Eventually, I had the courage
+to ask. "Why did you help me?"
+"long story", 2009 answers.
+"i'll give you 20 iron in
+sentinelcraft"
+
+After a short moment of
+silence, 2009 responded.
+
+"ok fine i'll spill just hollon
+lemme make a campfire"</pre>`)
+		} else if (page == '20') {
+res.send(`<pre>
+Vol: ${vol}, Page: ${page ?? "?"}
+"I used to have a dream like
+yours once."
+
+TBC since sentinelcraft does
+not want me to write a book
+longer than 20 minutes >:
+
+thx for reading tho ^o^
+
+ps: ik we're on render now
+but this was made on a mc
+book soo still cuts here lol
+</pre>`)
+		}
+	} else if (vol == '2') {
 	res.send(`<pre>
-	Please wait for 001 to retrieve the book. Thank you for your patience.
-	Vol: ${vol}, Page: ${page ?? 1}
-	</pre>`)
+i didnt finish volume 2
+Vol: ${vol}, Page: ${page ?? "?"}
+</pre>`)	
+	} else {
+	res.send(`<pre>
+Invalid Paramaters. Go back some pages, or go to volume 2 if you finished volume 1.
+Vol: ${vol}, Page: ${page ?? "?"}
+</pre>`) }
 })
 
 
