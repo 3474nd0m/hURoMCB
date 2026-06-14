@@ -24,3 +24,4 @@ is ALSO being worked on right now\
 NOT mentioned in the book in sentinelcraft\
 
 oh yeah also sorry for not working recently, hiatus and procrastonation got to me
+UPDATE: ECONNRESET got beef w me, nahh. wake me up when mineflayer can accept aternos serers
